@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="一个生存优先、会规划路径并能反思上一步的贪吃蛇 Agent。"
+    />
+    <title>Snake Agent · 会思考的贪吃蛇</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐍</text></svg>" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="ambient" aria-hidden="true"></div>
+
+    <div class="page">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">🐍</div>
+          <div class="brand-text">
+            <h1>Snake <span>Agent</span></h1>
+            <p>生存优先 · 规划路径 · 反思每一步</p>
+          </div>
+        </div>
+
+        <div class="scoreboard" aria-label="游戏数据">
+          <div class="stat">
+            <span>得分</span>
+            <strong id="score">0</strong>
+          </div>
+          <div class="stat">
+            <span>最高分</span>
+            <strong id="best">0</strong>
+          </div>
+          <div class="stat">
+            <span>长度</span>
+            <strong id="length">3</strong>
+          </div>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="stage" aria-label="游戏区域">
+          <div class="canvas-shell">
+            <canvas
+              id="board"
+              width="728"
+              height="560"
+              aria-label="贪吃蛇棋盘"
+            ></canvas>
+
+            <div class="overlay" id="overlay">
+              <div class="overlay-card">
+                <p class="eyebrow" id="overlayEyebrow">READY</p>
+                <h2 id="overlayTitle">准备好了吗？</h2>
+                <p id="overlayText">
+                  手动控制，或交给 Agent。它会先确认逃生空间，再靠近食物。
+                </p>
+                <button class="primary" id="overlayBtn" type="button">
+                  开始游戏
+                </button>
+                <p class="overlay-hint" id="overlayHint">
+                  方向键 / WASD 移动 · 空格暂停
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="stage-foot">
+            <p class="hint">
+              <span class="key">↑ ↓ ← →</span> / <span class="key">WASD</span>
+              移动
+              <span class="dot">·</span>
+              <span class="key">空格</span> 暂停
+              <span class="dot">·</span>
+              吃满棋盘即通关
+            </p>
+
+            <div class="dpad" aria-label="触屏方向键">
+              <button type="button" data-action="上" aria-label="上">↑</button>
+              <button type="button" data-action="左" aria-label="左">←</button>
+              <button type="button" data-action="下" aria-label="下">↓</button>
+              <button type="button" data-action="右" aria-label="右">→</button>
+            </div>
+          </div>
+        </section>
+
+        <aside class="sidebar">
+          <section class="card controls" aria-label="控制面板">
+            <div class="control-row">
+              <button class="primary" id="aiBtn" type="button">
+                <span class="ai-dot" aria-hidden="true"></span>
+                AI 接管
+              </button>
+              <button class="ghost" id="pauseBtn" type="button" disabled>
+                暂停
+              </button>
+              <button class="ghost" id="restartBtn" type="button">重开</button>
+            </div>
+
+            <label class="speed">
+              <span>速度</span>
+              <select id="speed">
+                <option value="170">悠闲</option>
+                <option value="120" selected>标准</option>
+                <option value="80">极速</option>
+              </select>
+            </label>
+          </section>
+
+          <section class="card agent-card" aria-label="Agent 决策">
+            <div class="card-head">
+              <div>
+                <p class="eyebrow">AGENT TRACE</p>
+                <h2>决策记录</h2>
+              </div>
+              <span class="status-pill" id="agentStatus">等待开始</span>
+            </div>
+
+            <p class="agent-empty" id="agentEmpty">
+              开启「AI 接管」，这里会显示每一步的观察、推理与最终动作。
+            </p>
+            <pre class="agent-output" id="agentOutput" hidden></pre>
+          </section>
+
+          <section class="card rules" aria-label="决策优先级">
+            <p class="eyebrow">PRIORITY</p>
+            <h2>决策优先级</h2>
+            <ol>
+              <li>
+                <strong>先保证存活</strong>
+                <span>检查移动后的可达空间与回到尾部的路径，不钻死胡同。</span>
+              </li>
+              <li>
+                <strong>再靠近食物</strong>
+                <span>只在安全走法中按 BFS 距离选择，不无脑贪心。</span>
+              </li>
+              <li>
+                <strong>三条底线</strong>
+                <span>不掉头、不撞墙、不自噬。</span>
+              </li>
+            </ol>
+          </section>
+        </aside>
+      </main>
+
+      <footer class="footer">
+        <span>Snake Agent</span>
+        <span class="dot">·</span>
+        <span>Canvas + 原生 ES Modules</span>
+        <span class="dot">·</span>
+        <a href="https://github.com/fish0226-hub/snake-agent">GitHub</a>
+      </footer>
+    </div>
+
+    <script type="module" src="./src/game.js"></script>
+  </body>
+</html>
